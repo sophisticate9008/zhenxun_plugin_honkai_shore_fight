@@ -162,7 +162,6 @@ async def _(
         money_have = (await UserConsole.get_user(user_id)).gold
         text = f"{result_text}, 当前金币为 {money_have}"
         # 构造并发送消息
-        await MessageUtils.build_message(text).send(reply_to=True)
         if message_id := state.get("message_id"):
             await WithdrawManager.withdraw_message(
                 bot,
@@ -170,4 +169,6 @@ async def _(
                 plugin_config.get("WITHDRAW_SHORE_FIGHT"),
                 session,
             )
-    await shore_fight_matcher.reject_path("idx_and_money", "仔细检查参数")
+        await MessageUtils.build_message(text).send(reply_to=True)
+    else:
+        await shore_fight_matcher.reject_path("idx_and_money", "仔细检查参数")
