@@ -1,5 +1,6 @@
 import random
 from collections.abc import Callable
+from typing import Any
 
 
 class RoleBase:
@@ -25,7 +26,7 @@ class RoleBase:
     tear: int = 0
     text: list[str]
     """记录战斗文本,同一场战斗双方传入相同的由外部传来的列表"""
-    result: dict[str, str]
+    result: dict[str, Any]
     """记录战斗结果,同一场战斗双方传入相同的由外部传来的字典来记录胜利者"""
     def __init__(
         self,
@@ -129,7 +130,7 @@ class RoleBase:
         self.enemy.ap = 0
 
     def attack_normal(self):  # 普通攻击
-        text = f"{self.name}发动普通攻击,造成{self.attack}点伤害"
+        text = f"{self.name}发动{self.attack}点伤害的普通攻击"
         if self.chaos:
             text += "但由于混乱，返还自身"
             self.text_handle(text)

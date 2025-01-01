@@ -29,13 +29,13 @@ from .fight.pic_make import image_add_text
 
 __plugin_meta__ = PluginMetadata(
     name="海滨的灼热乱斗",
-    description="崩坏三曾经的网页赛制押注活动,插件以文字方式展示战斗过程并可以押注金币(仅限qq平台)",
+    description="文字战斗模拟押注",
     usage="""
     海滨乱斗(?静默)
     """,
     extra=PluginExtraData(
         author="sophisticate9008",
-        version="0.1",
+        version="0.2",
         menu_type="群内小游戏",
         plugin_type=PluginType.NORMAL,
         configs=[

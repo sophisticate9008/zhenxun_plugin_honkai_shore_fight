@@ -3,8 +3,6 @@ import random
 
 from .role_base import RoleBase
 
-saved_state = None
-
 
 class KaiWen(RoleBase):
     def skill_action(self):
@@ -63,7 +61,7 @@ class GeLeiXiu(RoleBase):
         self.shield = 15
         self.text_handle(text)
 
-    def cal_harmed(self): # type: ignore
+    def cal_harmed(self):  # type: ignore
         harmed = 0
         super().cal_harmed()
         if self.shield > 0:
@@ -110,8 +108,7 @@ class Sakura(RoleBase):
 
         def update_turn_begin(self: "RoleBase", func):
             def wrapper():
-                global saved_state
-                saved_state = copy.deepcopy(self.enemy)
+                self.result["saved_state"] = copy.deepcopy(self.enemy)
                 func()
 
             return wrapper
@@ -121,8 +118,7 @@ class Sakura(RoleBase):
 
     def cal_tear_harm(self):
         super().cal_tear_harm()
-        global saved_state
-        saved_state = copy.deepcopy(self)
+        self.result["saved_state"] = copy.deepcopy(self)
 
     def judge_action(self):
         if self.action_num < 1:
@@ -158,10 +154,15 @@ class Sakura(RoleBase):
         else:
             if not self.action_able:
                 return
-            global saved_state
             update_dict = {}
-            for key, value in saved_state.__dict__.items():
-                if key != "enemy" and key != "original_funcs" and key != "result":
+            for key, value in self.result["saved_state"].__dict__.items():
+                if key not in [
+                    "enemy",
+                    "original_funcs",
+                    "result",
+                    "txts",
+                    "rand_dodge",
+                ]:
                     update_dict[key] = value
             self.__dict__.update(update_dict)
             self.count_turn = self.enemy.count_turn
@@ -230,11 +231,13 @@ class Hua(RoleBase):
 
 class WeiErWei(RoleBase):
     skill_once: bool = False  # 明确声明类型并赋初值
+
     def skill_action(self):
         self.ad += self.attack
         self.enemy.chaos = True
         text = f"维尔薇-创(造)力发动,造成{self.ad}点伤害,并使对手混乱"
         self.text_handle(text)
+
     def skill_passive(self):
         def update_turn_begin(self: "WeiErWei", func):
             def wrapper():
@@ -372,7 +375,8 @@ class PaDuoFeiLiSi(RoleBase):
 
 
 class YiDian(RoleBase):
-    origin_speed:int
+    origin_speed: int
+
     def skill_action(self):
         text = "伊甸-闪亮登场发动,攻击力+4,并发动普通攻击且下次先攻"
         self.text_handle(text)
